@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-    <name>bbBrain</name>
+    <name>bb_brain</name>
     <version>0.0.0</version>
-    <description>The bbBrain package</description>
+    <description>The bb_brain package</description>
 
     <!-- One maintainer tag required, multiple allowed, one person per tag -->
     <!-- Example:  -->
