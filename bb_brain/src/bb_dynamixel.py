@@ -8,6 +8,8 @@
 
 # publishes voltage to /bb_hex/voltage topic (standard Float32 message)
 
+# publishes current servo angles and loads to /bb_hex/servo_current topic (bb_msgs.msg.ServoCurrent message)
+
 
 import rospy
 
