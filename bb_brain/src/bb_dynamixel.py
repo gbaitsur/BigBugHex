@@ -3,7 +3,7 @@
 # interface between bb_kinematics and dynamixel servos
 
 
-# listens to /bb_hex/servo_targets topic for servo target angles (bb_msgs.msg.ServoTargets message)
+# subscribes to /bb_hex/servo_targets topic for servo target angles (bb_msgs.msg.ServoTargets message)
 
 
 # publishes voltage to /bb_hex/voltage topic (standard Float32 message)
