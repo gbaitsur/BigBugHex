@@ -132,3 +132,7 @@ def closest_intersection(circle_center, radius, line_start, line_end):
         return pt1
     else:
         return pt2
+
+
+def mm_to_m(mm):
+    return mm / 1000

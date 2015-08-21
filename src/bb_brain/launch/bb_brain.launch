@@ -1,8 +1,8 @@
 <launch>
-
-	<node name="bb_kinematics" pkg="bb_brain" type="bb_kinematics.py">
-		<rosparam command="load" file="$(find bb_brain)/params/movement.yaml" />
-	</node>
+	<rosparam command="load" file="$(find bb_brain)/params/movement.yaml" ns="bb_hex"/>
+	
+<!--	<node name="bb_kinematics" pkg="bb_brain" type="bb_kinematics.py">-->
+<!--	</node>-->
 
 
 </launch>

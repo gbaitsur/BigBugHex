@@ -28,17 +28,19 @@
 import rospy
 
 
+
+
 # parameters
-
-
-
-
-
-
-
+max_vel_x = 0.0
+max_vel_theta = 0.0
 
 
 def run():
+    # get parameters
+    max_vel_x = rospy.get_param("/bb_hex/max_vel_x")
+    max_vel_theta = rospy.get_param("/bb_hex/max_vel_theta")
+
+
     while not rospy.is_shutdown():
         pass
 
