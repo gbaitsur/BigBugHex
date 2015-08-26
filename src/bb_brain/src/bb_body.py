@@ -26,12 +26,12 @@ class Thorax(object):
         # initializes legs and puts them in a dictionary
 
         # leg mount point is on the top surface of thorax
-        self.legs["rf"] = Leg("rf", self, MountDescriptor(m(182.343), m(-104.843), m(0), r(-45)), (101, 102, 103, 19))
-        self.legs["rm"] = Leg("rm", self, MountDescriptor(m(0), m(-114.198), m(0), r(-90)), (104, 105, 106, 11))
-        self.legs["rr"] = Leg("rr", self, MountDescriptor(m(-182.343), m(-84.843), m(0), r(-135)), (107, 108, 109, 14))
-        self.legs["lf"] = Leg("lf", self, MountDescriptor(m(182.343), m(104.843), m(0), r(45)), (116, 117, 118, 13))
-        self.legs["lm"] = Leg("lm", self, MountDescriptor(m(0), m(114.198), m(0), r(90)), (113, 114, 115, 20))
-        self.legs["lr"] = Leg("lr", self, MountDescriptor(m(182.343), m(84.843), m(0), r(135)), (110, 111, 112, 15))
+        self.legs["rf"] = Leg("rf", self, MountDescriptor(m(+182.343), m(-104.843), m(0), r(-045.0)), (101, 102, 103, 19))
+        self.legs["rm"] = Leg("rm", self, MountDescriptor(m(0000.000), m(-114.198), m(0), r(-90.00)), (104, 105, 106, 11))
+        self.legs["rr"] = Leg("rr", self, MountDescriptor(m(-182.343), m(-084.843), m(0), r(-135.0)), (107, 108, 109, 14))
+        self.legs["lf"] = Leg("lf", self, MountDescriptor(m(+182.343), m(+104.843), m(0), r(+045.0)), (116, 117, 118, 13))
+        self.legs["lm"] = Leg("lm", self, MountDescriptor(m(0000.000), m(+114.198), m(0), r(+90.00)), (113, 114, 115, 20))
+        self.legs["lr"] = Leg("lr", self, MountDescriptor(m(+182.343), m(+084.843), m(0), r(+135.0)), (110, 111, 112, 15))
 
         self.legs["rf"].rostral_neighbor = self.legs["lf"]
         self.legs["rf"].caudal_neighbor = self.legs["rm"]
@@ -707,17 +707,18 @@ class Leg(object):
         else:
             return 0
 
-            # <-- RESTRICTEDNESS
+
+# <-- RESTRICTEDNESS
 
 
 class Segment(object):
     def __init__(self, name, servo_id, min_angle, neutral_angle, max_angle, length, parent, leg, offset_in_parent, mirrored=False, z_rot=False):
         self.name = name
-        self.parent = parent
-        self.leg = leg
+        self.parent = parent  # segment to which this one is attached
+        self.leg = leg  # leg to which this segment belongs
 
         self.length = length
-        self.offset_in_parent = offset_in_parent
+        self.offset_in_parent = offset_in_parent  # X coordinate of this segment's origin in parent cs
 
         self.min_angle = min_angle
         self.max_angle = max_angle
@@ -737,19 +738,15 @@ class Segment(object):
             self.load_direction = 1
 
         self.mirrored = mirrored
-        self.z_rot = z_rot
+        self.z_rot = z_rot  # indicates when segment rotates around Z-axis and not Y-axis, as usual
         self._current_angle = 0
 
-        self.servo_id = servo_id
-
-        self.lifted = False
-        self.landing_counter = 0
-        self.load = 0
+        self.servo_id = servo_id  # dynamixel id of segment's servo
 
         if self.z_rot:
-            self.cs = CoordinateSystem(parent.cs, self.name, 0, self.offset_in_parent, 0, 0, 0, self._current_angle)
+            self.cs = CoordinateSystem(parent.cs, self.name, self.offset_in_parent, 0, 0, 0, 0, self._current_angle)
         else:
-            self.cs = CoordinateSystem(parent.cs, self.name, 0, self.offset_in_parent, 0, self._current_angle, 0, 0)
+            self.cs = CoordinateSystem(parent.cs, self.name, self.offset_in_parent, 0, 0, 0, self._current_angle, 0)
 
     def __str__(self):
         return self.name
@@ -783,8 +780,8 @@ class Segment(object):
 
     @current_angle.setter
     def current_angle(self, value):
-        if "rr" in self.name and "test" not in self.name:
-            pass
+        # assign angle to segment
+        # make sure that segment never goes beyond angle limits
         if self.min_angle <= value <= self.max_angle:
             self._current_angle = value
         elif value < self.min_angle:
@@ -795,7 +792,7 @@ class Segment(object):
         if self.z_rot:
             self.cs.redefine(new_rotz=self._current_angle)
         else:
-            self.cs.redefine(new_rotx=self._current_angle)
+            self.cs.redefine(new_roty=self._current_angle)
 
     def set_angle_from_servo(self, angle):
         self._current_angle = self.angle_from_servo(angle)
